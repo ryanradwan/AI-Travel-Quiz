@@ -100,7 +100,7 @@ export default function LandingPage({ onStart }) {
         >
           <div className="flex items-center gap-2 text-caramel font-lato text-sm">
             <Compass size={18} aria-hidden="true" />
-            <span>12 Questions</span>
+            <span>15 Questions</span>
           </div>
           <div className="flex items-center gap-2 text-caramel font-lato text-sm">
             <MapPin size={18} aria-hidden="true" />
