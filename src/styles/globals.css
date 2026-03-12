@@ -1,0 +1,70 @@
+/* ============================================================
+   The Next Stamp — Global Styles
+   Brand color palette defined as CSS custom properties
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties (variables) for the brand palette */
+:root {
+  --color-dark-brown:   #5d4430;
+  --color-medium-brown: #7b5e42;
+  --color-caramel:      #a1775c;
+  --color-warm-sand:    #ddccb8;
+  --color-light-linen:  #ede8e3;
+  --color-cream:        #f2e9da;
+  --color-white:        #ffffff;
+}
+
+/* Base body styles */
+body {
+  font-family: 'Lato', sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-dark-brown);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus visible styles — caramel colored outline for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-caramel);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Subtle linen texture overlay using CSS noise pattern */
+.linen-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Progress bar smooth transition */
+.progress-bar-fill {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Rotating animation for the loading compass icon */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Custom scrollbar — branded */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-light-linen);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-warm-sand);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-caramel);
+}
