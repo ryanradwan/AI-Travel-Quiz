@@ -161,30 +161,24 @@ export default function ResultsScreen({ results, email, onRetake }) {
                     </button>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <a
-                      href={twitterUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => (window.top || window).open(twitterUrl, '_blank', 'noopener,noreferrer')}
                       className="flex items-center gap-3 bg-[#1DA1F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       𝕏 Share on X / Twitter
-                    </a>
-                    <a
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </button>
+                    <button
+                      onClick={() => (window.top || window).open(whatsappUrl, '_blank', 'noopener,noreferrer')}
                       className="flex items-center gap-3 bg-[#25D366] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       💬 Share on WhatsApp
-                    </a>
-                    <a
-                      href={facebookUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </button>
+                    <button
+                      onClick={() => (window.top || window).open(facebookUrl, '_blank', 'noopener,noreferrer')}
                       className="flex items-center gap-3 bg-[#1877F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       📘 Share on Facebook
-                    </a>
+                    </button>
                   </div>
                 </motion.div>
               </motion.div>
