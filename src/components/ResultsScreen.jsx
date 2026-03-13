@@ -25,22 +25,15 @@ export default function ResultsScreen({ results, email, onRetake }) {
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
-    try {
-      navigator.clipboard.writeText(shareUrl).then(() => {
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        // Clipboard API blocked in iframe — show native prompt so user can copy manually
+        window.prompt('Copy this link:', shareUrl);
       });
-    } catch {
-      // fallback: select and copy
-      const el = document.createElement('textarea');
-      el.value = shareUrl;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
   }
 
   // Fire confetti once on mount
