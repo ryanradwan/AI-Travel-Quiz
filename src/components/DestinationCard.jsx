@@ -217,7 +217,7 @@ export default function DestinationCard({ destination, index }) {
               <span className="text-caramel text-xs">→</span>
             </a>
             <a
-              href={`https://www.viator.com/search/${encodeURIComponent(destination.destination)}?pid=P00122757&mcid=42383&medium=link`}
+              href={`https://www.viator.com/searchResults/all?text=${encodeURIComponent(destination.destination)}&pid=P00122757&mcid=42383&medium=link`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-between bg-light-linen hover:bg-warm-sand text-dark-brown font-lato text-sm font-semibold px-4 py-3 rounded-xl transition-colors duration-200"
