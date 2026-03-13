@@ -50,9 +50,22 @@ export default function ResultsScreen({ results, email, onRetake }) {
   const shareText = `I just discovered I'm a "${results?.travelPersonality}" traveler! My top destination is ${topDestination}. Find yours → thenextstamptravelco.com/ai-travel-quiz/`;
   const shareUrl = `https://thenextstamptravelco.com/ai-travel-quiz/`;
 
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-  const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+  // ── Share URLs ──────────────────────────────────────────────────────────
+  // Twitter: text + url param
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+  // WhatsApp: wa.me is the canonical share endpoint (works on mobile & desktop)
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  // Facebook: sharer.php only accepts ?u= (the quote param is unsupported and causes redirects)
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  // Email fallback
+  const mailtoUrl = `mailto:?subject=${encodeURIComponent('My travel personality results')}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+
+  function openPopup(url) {
+    const w = 600, h = 600;
+    const left = Math.round(window.screen.width / 2 - w / 2);
+    const top  = Math.round(window.screen.height / 2 - h / 2);
+    window.open(url, 'share', `width=${w},height=${h},left=${left},top=${top},noopener,noreferrer`);
+  }
 
   if (!results || !results.destinations) {
     return (
@@ -175,23 +188,29 @@ export default function ResultsScreen({ results, email, onRetake }) {
                   </div>
                   <div className="flex flex-col gap-3">
                     <button
-                      onClick={() => window.open(twitterUrl, '_blank', 'noopener,noreferrer')}
+                      onClick={() => openPopup(twitterUrl)}
                       className="flex items-center gap-3 bg-[#1DA1F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       𝕏 Share on X / Twitter
                     </button>
                     <button
-                      onClick={() => window.open(whatsappUrl, '_blank', 'noopener,noreferrer')}
+                      onClick={() => openPopup(whatsappUrl)}
                       className="flex items-center gap-3 bg-[#25D366] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       💬 Share on WhatsApp
                     </button>
                     <button
-                      onClick={() => window.open(facebookUrl, '_blank', 'noopener,noreferrer')}
+                      onClick={() => openPopup(facebookUrl)}
                       className="flex items-center gap-3 bg-[#1877F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       📘 Share on Facebook
                     </button>
+                    <a
+                      href={mailtoUrl}
+                      className="flex items-center gap-3 bg-medium-brown text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      ✉️ Share via Email
+                    </a>
                     <button
                       onClick={handleCopy}
                       className="flex items-center gap-3 bg-light-linen text-dark-brown font-lato font-bold px-4 py-3 rounded-xl hover:bg-warm-sand transition-colors border border-warm-sand"
