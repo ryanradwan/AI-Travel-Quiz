@@ -138,7 +138,24 @@ export default function QuizScreen({ onComplete, savedProgress }) {
 
       {/* ── Question card area ── */}
       <div className="flex-1 flex items-start justify-center px-4 py-10 overflow-hidden">
-        <div className="w-full max-w-[680px]">
+        <motion.div
+          className="w-full max-w-[680px]"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.15}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -50) {
+              // Only advance if there's an answer for the current question
+              if (answers[currentQuestion.id]) {
+                setDirection(1);
+                const nextIndex = currentIndex + 1;
+                if (nextIndex < totalQuestions) setCurrentIndex(nextIndex);
+              }
+            } else if (info.offset.x > 50) {
+              handleBack();
+            }
+          }}
+        >
           <AnimatePresence mode="wait" custom={direction}>
             <QuestionCard
               key={currentQuestion.id}
@@ -148,7 +165,7 @@ export default function QuizScreen({ onComplete, savedProgress }) {
               direction={direction}
             />
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

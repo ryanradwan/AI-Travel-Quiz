@@ -8,6 +8,7 @@
  * - Top Activities styled as rounded tags
  */
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Wallet } from 'lucide-react';
 
@@ -44,6 +45,9 @@ const rankConfig = {
  */
 export default function DestinationCard({ destination, index }) {
   const rank = rankConfig[destination.rank] ?? rankConfig[2];
+  const [imgError, setImgError] = useState(false);
+
+  const imageUrl = `https://source.unsplash.com/featured/800x400?${encodeURIComponent(destination.destination)},travel,city`;
 
   return (
     <motion.div
@@ -57,6 +61,26 @@ export default function DestinationCard({ destination, index }) {
       style={{ borderTop: `4px solid ${rank.borderColor}` }}
       aria-label={`Destination recommendation ${destination.rank}: ${destination.destination}`}
     >
+      {/* ── Destination Photo ── */}
+      <div className="relative w-full h-48 overflow-hidden">
+        {!imgError ? (
+          <img
+            src={imageUrl}
+            alt={destination.destination}
+            loading="lazy"
+            onError={() => setImgError(true)}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div
+            className="w-full h-full bg-gradient-to-br from-caramel to-dark-brown"
+            aria-hidden="true"
+          />
+        )}
+        {/* Subtle gradient overlay at bottom */}
+        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white/60 to-transparent" />
+      </div>
+
       {/* ── Card Header ── */}
       <div className="p-6 md:p-8 pb-0">
         {/* Rank badge + Match Score */}

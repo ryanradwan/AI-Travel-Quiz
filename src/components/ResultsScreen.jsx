@@ -6,8 +6,13 @@
  * Below results is the upsell section (scrolled to automatically when user clicks a card CTA).
  */
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Share2 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import DestinationCard from './DestinationCard.jsx';
+
+const BRAND_COLORS = ['#D4AF37', '#8B6347', '#F5F0E8', '#C4956A', '#4A3728'];
 
 /**
  * ResultsScreen component
@@ -16,6 +21,34 @@ import DestinationCard from './DestinationCard.jsx';
  * @param {function} onRetake  - Called when user clicks "Retake the quiz"
  */
 export default function ResultsScreen({ results, email, onRetake }) {
+  const [copied, setCopied] = useState(false);
+
+  // Fire confetti once on mount
+  useEffect(() => {
+    confetti({
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.4 },
+      colors: BRAND_COLORS,
+    });
+  }, []);
+
+  async function handleShare() {
+    const topDestination = results.destinations?.find(d => d.rank === 1)?.destination ?? 'an amazing destination';
+    const shareText = `I just discovered I'm a "${results.travelPersonality}" traveler! My top destination is ${topDestination}. Find yours → thenextstamptravelco.com/ai-travel-quiz/`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ text: shareText });
+      } catch {
+        // User dismissed share sheet — do nothing
+      }
+    } else {
+      await navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  }
 
   if (!results || !results.destinations) {
     return (
@@ -95,6 +128,23 @@ export default function ResultsScreen({ results, email, onRetake }) {
             </motion.p>
           )}
 
+          {/* Share button */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.28 }}
+            className="flex justify-center mb-4"
+          >
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 bg-dark-brown text-cream font-lato font-bold text-sm px-5 py-2.5 rounded-full hover:bg-medium-brown transition-colors duration-200 focus-visible:outline-caramel"
+              aria-label="Share your results"
+            >
+              <Share2 size={15} />
+              {copied ? '✓ Copied to clipboard!' : 'Share My Results'}
+            </button>
+          </motion.div>
+
           {/* Email confirmation */}
           {email && (
             <motion.p
@@ -141,8 +191,6 @@ export default function ResultsScreen({ results, email, onRetake }) {
           Not quite right? Retake the quiz →
         </button>
       </div>
-
-
     </div>
   );
 }

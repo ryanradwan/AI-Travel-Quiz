@@ -51,12 +51,24 @@ function getPersonalisedMessages(answers) {
   ];
 }
 
+const travelTips = [
+  '✈️ Booking flights on Tuesdays can save up to 15% vs weekends',
+  '🎒 Rolling clothes instead of folding saves 30% more packing space',
+  '🌅 Arriving at popular sites at opening avoids 80% of the crowds',
+  '🔌 Always carry a universal adapter — outlets differ in 15+ country types',
+  '📱 Download offline maps before you land — roaming costs add up fast',
+  '🏨 Boutique hotels often cost less than chains and feel more local',
+  '💳 Notify your bank before travel to avoid card blocks abroad',
+  '🌍 Over 195 countries exist — most travelers visit fewer than 10',
+];
+
 /**
  * LoadingScreen component
  * @param {Object} answers - The user's quiz answers (passed from App)
  */
 export default function LoadingScreen({ answers }) {
   const [messageIndex, setMessageIndex] = useState(0);
+  const [tipIndex, setTipIndex] = useState(0);
 
   const messages = getPersonalisedMessages(answers);
 
@@ -68,6 +80,15 @@ export default function LoadingScreen({ answers }) {
 
     return () => clearInterval(interval);
   }, [messages.length]);
+
+  // Cycle through travel tips every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % travelTips.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div
@@ -113,7 +134,7 @@ export default function LoadingScreen({ answers }) {
       </p>
 
       {/* Subtle animated dots indicator */}
-      <div className="flex gap-2 mt-8" aria-hidden="true">
+      <div className="flex gap-2 mt-8 mb-8" aria-hidden="true">
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
@@ -126,6 +147,27 @@ export default function LoadingScreen({ answers }) {
             }}
           />
         ))}
+      </div>
+
+      {/* Travel tip carousel */}
+      <div className="w-full max-w-sm">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tipIndex}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }}
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.3 } }}
+            className="bg-dark-brown/10 rounded-xl px-4 py-3 text-center"
+            aria-live="polite"
+          >
+            <p className="font-lato text-xs text-caramel uppercase tracking-widest mb-1">
+              Travel Tip
+            </p>
+            <p className="font-lato text-medium-brown text-sm italic">
+              {travelTips[tipIndex]}
+            </p>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
