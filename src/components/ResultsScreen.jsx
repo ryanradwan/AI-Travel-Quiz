@@ -55,9 +55,7 @@ export default function ResultsScreen({ results, email, onRetake }) {
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   // WhatsApp: use native app scheme — opens WhatsApp app directly without any web redirect
   const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(shareText)}`;
-  // Facebook: sharer.php only accepts ?u= (the quote param is unsupported and causes redirects)
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-  // Email fallback
+// Email fallback
   const mailtoUrl = `mailto:?subject=${encodeURIComponent('My travel personality results')}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
 
   function openPopup(url) {
@@ -199,13 +197,7 @@ export default function ResultsScreen({ results, email, onRetake }) {
                     >
                       💬 Share on WhatsApp
                     </button>
-                    <button
-                      onClick={() => openPopup(facebookUrl)}
-                      className="flex items-center gap-3 bg-[#1877F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
-                    >
-                      📘 Share on Facebook
-                    </button>
-                    <a
+<a
                       href={mailtoUrl}
                       className="flex items-center gap-3 bg-medium-brown text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
