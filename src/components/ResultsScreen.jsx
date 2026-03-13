@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, X } from 'lucide-react';
+import { Share2, X, Copy, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import DestinationCard from './DestinationCard.jsx';
 
@@ -22,6 +22,26 @@ const BRAND_COLORS = ['#D4AF37', '#8B6347', '#F5F0E8', '#C4956A', '#4A3728'];
  */
 export default function ResultsScreen({ results, email, onRetake }) {
   const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    try {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    } catch {
+      // fallback: select and copy
+      const el = document.createElement('textarea');
+      el.value = shareUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
 
   // Fire confetti once on mount
   useEffect(() => {
@@ -38,7 +58,7 @@ export default function ResultsScreen({ results, email, onRetake }) {
   const shareUrl = `https://thenextstamptravelco.com/ai-travel-quiz/`;
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
 
   if (!results || !results.destinations) {
@@ -178,6 +198,13 @@ export default function ResultsScreen({ results, email, onRetake }) {
                       className="flex items-center gap-3 bg-[#1877F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
                     >
                       📘 Share on Facebook
+                    </button>
+                    <button
+                      onClick={handleCopy}
+                      className="flex items-center gap-3 bg-light-linen text-dark-brown font-lato font-bold px-4 py-3 rounded-xl hover:bg-warm-sand transition-colors border border-warm-sand"
+                    >
+                      {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+                      {copied ? 'Link Copied!' : 'Copy Link'}
                     </button>
                   </div>
                 </motion.div>
