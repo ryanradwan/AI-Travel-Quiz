@@ -8,7 +8,6 @@
  * - Top Activities styled as rounded tags
  */
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Wallet } from 'lucide-react';
 
@@ -45,9 +44,6 @@ const rankConfig = {
  */
 export default function DestinationCard({ destination, index }) {
   const rank = rankConfig[destination.rank] ?? rankConfig[2];
-  const [imgError, setImgError] = useState(false);
-
-  const imageUrl = `https://source.unsplash.com/featured/800x400?${encodeURIComponent(destination.destination)},travel,city`;
 
   return (
     <motion.div
@@ -61,24 +57,16 @@ export default function DestinationCard({ destination, index }) {
       style={{ borderTop: `4px solid ${rank.borderColor}` }}
       aria-label={`Destination recommendation ${destination.rank}: ${destination.destination}`}
     >
-      {/* ── Destination Photo ── */}
-      <div className="relative w-full h-48 overflow-hidden">
-        {!imgError ? (
-          <img
-            src={imageUrl}
-            alt={destination.destination}
-            loading="lazy"
-            onError={() => setImgError(true)}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div
-            className="w-full h-full bg-gradient-to-br from-caramel to-dark-brown"
-            aria-hidden="true"
-          />
-        )}
-        {/* Subtle gradient overlay at bottom */}
-        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white/60 to-transparent" />
+      {/* ── Destination Banner ── */}
+      <div
+        className="relative w-full h-40 flex flex-col items-center justify-center"
+        style={{ background: `linear-gradient(135deg, ${rank.borderColor}55 0%, #4A3728 100%)` }}
+      >
+        <p className="text-4xl mb-2" aria-hidden="true">{destination.countryEmoji}</p>
+        <p className="font-playfair text-white font-bold text-xl text-center px-4 drop-shadow">
+          {destination.destination}
+        </p>
+        <p className="font-lato text-white/70 text-xs mt-1">{destination.country}</p>
       </div>
 
       {/* ── Card Header ── */}

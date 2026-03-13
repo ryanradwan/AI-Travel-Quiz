@@ -7,8 +7,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Share2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Share2, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import DestinationCard from './DestinationCard.jsx';
 
@@ -21,7 +21,7 @@ const BRAND_COLORS = ['#D4AF37', '#8B6347', '#F5F0E8', '#C4956A', '#4A3728'];
  * @param {function} onRetake  - Called when user clicks "Retake the quiz"
  */
 export default function ResultsScreen({ results, email, onRetake }) {
-  const [copied, setCopied] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Fire confetti once on mount
   useEffect(() => {
@@ -33,22 +33,13 @@ export default function ResultsScreen({ results, email, onRetake }) {
     });
   }, []);
 
-  async function handleShare() {
-    const topDestination = results.destinations?.find(d => d.rank === 1)?.destination ?? 'an amazing destination';
-    const shareText = `I just discovered I'm a "${results.travelPersonality}" traveler! My top destination is ${topDestination}. Find yours → thenextstamptravelco.com/ai-travel-quiz/`;
+  const topDestination = results?.destinations?.find(d => d.rank === 1)?.destination ?? 'an amazing destination';
+  const shareText = `I just discovered I'm a "${results?.travelPersonality}" traveler! My top destination is ${topDestination}. Find yours → thenextstamptravelco.com/ai-travel-quiz/`;
+  const shareUrl = `https://thenextstamptravelco.com/ai-travel-quiz/`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ text: shareText });
-      } catch {
-        // User dismissed share sheet — do nothing
-      }
-    } else {
-      await navigator.clipboard.writeText(shareText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
-  }
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
 
   if (!results || !results.destinations) {
     return (
@@ -136,14 +127,69 @@ export default function ResultsScreen({ results, email, onRetake }) {
             className="flex justify-center mb-4"
           >
             <button
-              onClick={handleShare}
+              onClick={() => setShowShareModal(true)}
               className="inline-flex items-center gap-2 bg-dark-brown text-cream font-lato font-bold text-sm px-5 py-2.5 rounded-full hover:bg-medium-brown transition-colors duration-200 focus-visible:outline-caramel"
               aria-label="Share your results"
             >
               <Share2 size={15} />
-              {copied ? '✓ Copied to clipboard!' : 'Share My Results'}
+              Share My Results
             </button>
           </motion.div>
+
+          {/* Share modal */}
+          <AnimatePresence>
+            {showShareModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center px-4"
+                style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+                onClick={() => setShowShareModal(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-playfair text-dark-brown font-bold text-lg">Share Your Results</h3>
+                    <button onClick={() => setShowShareModal(false)} className="text-medium-brown hover:text-dark-brown">
+                      <X size={20} />
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <a
+                      href={twitterUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-[#1DA1F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      𝕏 Share on X / Twitter
+                    </a>
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-[#25D366] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      💬 Share on WhatsApp
+                    </a>
+                    <a
+                      href={facebookUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-[#1877F2] text-white font-lato font-bold px-4 py-3 rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      📘 Share on Facebook
+                    </a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Email confirmation */}
           {email && (
