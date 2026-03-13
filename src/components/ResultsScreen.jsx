@@ -53,8 +53,8 @@ export default function ResultsScreen({ results, email, onRetake }) {
   // ── Share URLs ──────────────────────────────────────────────────────────
   // Twitter: text + url param
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-  // WhatsApp: wa.me is the canonical share endpoint (works on mobile & desktop)
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  // WhatsApp: use native app scheme — opens WhatsApp app directly without any web redirect
+  const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(shareText)}`;
   // Facebook: sharer.php only accepts ?u= (the quote param is unsupported and causes redirects)
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
   // Email fallback
