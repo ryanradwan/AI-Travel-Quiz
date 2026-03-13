@@ -61,7 +61,7 @@ export default function LandingPage({ onStart }) {
           variants={itemVariants}
           className="font-lato text-medium-brown text-lg md:text-xl leading-relaxed mb-8 max-w-[560px]"
         >
-          Answer 12 questions and let AI uncover the destination you were always meant to visit next.
+          Answer 15 questions and let AI uncover the destination you were always meant to visit next.
         </motion.p>
 
         {/* Decorative divider */}
